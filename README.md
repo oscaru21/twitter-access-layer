@@ -1,10 +1,10 @@
 # Spring boot API folder structure
--main package
-    -entity
-    -repository
-    -service
-    -controller
-    -exception
+- main package
+  - entity
+  - repository
+  - service
+  - controller
+  - exception
 
 ## Persistence layer tests.
 In order to test the persistance layers, spring-test provides the @DataJpaTest annotation that allows us to test only the repositorys with in memory data so we don't have to mock any other bean, for each repository we should at least test the basic CRUD operations writting one test for each operation following the following syntax:

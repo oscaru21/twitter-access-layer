@@ -69,4 +69,49 @@ List<Tweet> findTweetsLikeText(String text);
 ```
 
 ## @BeforeEach JUnit annotation.
-We can use this annotation to create commons instances or initial setup for every test.
+We can use this annotation to create commons instances or initial setup for every test.}
+
+# Mockito
+We have two different ways two mock dependencies using mockito
+- @Autowired dependency injection and @InjectMocks @Mock annotations
+```java
+//class under test
+@Service
+
+public class TweetService {
+	@Autowired
+	private TweetRepository tweetRepository;
+}
+
+//test class
+@EntedWith(MockitoExtension.class)
+public class TweetServiceTests {
+	@Mock
+	private TweetRepository tweetRepository;
+	@InjectMocks
+	private TweetService tweetService;
+}
+```   
+- Constructor dependency injection and mock() method.
+```java
+//class under test
+@Service
+@RequiredArgsConstructor
+public class TweetService {
+	private final TweetRepository tweetRepository;
+}
+
+//test class
+public class TweetServiceTests {
+	private TweetRepository tweetRepository;
+	private TweetService tweetService;
+	
+	@BeforeEach
+	public void setup(){
+		tweetRepository = Mockito.mock(TweetRepository.class);
+		tweetService = new TweetService(tweetRepository);
+	}
+}
+```   
+## Controller layer unit testing
+To test the controller layer we will use the @WebMvcTest annotation. Using this annotation will disable full auto-configuration and instead apply only configuration relevant to MVC tests (i.e. @Controller, @ControllerAdvice, @JsonComponent, Converter/GenericConverter, Filter, WebMvcConfigurer and HandlerMethodArgumentResolver beans but not @Component, @Service or @Repository beans).

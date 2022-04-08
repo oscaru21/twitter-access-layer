@@ -115,3 +115,19 @@ public class TweetServiceTests {
 ```   
 ## Controller layer unit testing
 To test the controller layer we will use the @WebMvcTest annotation. Using this annotation will disable full auto-configuration and instead apply only configuration relevant to MVC tests (i.e. @Controller, @ControllerAdvice, @JsonComponent, Converter/GenericConverter, Filter, WebMvcConfigurer and HandlerMethodArgumentResolver beans but not @Component, @Service or @Repository beans).
+
+In order to test each of the REST API methods we have to mock tehm using the MockMvc class perform method that perform a request and return a type that allows chaining further. We can define this type using the contentType method and the content methods to set the content itself.
+
+```java
+mockMvc.perform(MockMvcRequestBuilders.post("/v1/api/tweets")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(tweet)));
+```
+
+We will test the response in order to see if the http status is the one that we expect using the MovkMvcResultMatchers.status() and compare each of the JSON response fields using the MockMvcResultMatchers.jsonPath("$.parameter", CoreMatchers.is()):
+```java
+response.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(tweet.getName())))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(tweet.getUsername())));
+```
+
